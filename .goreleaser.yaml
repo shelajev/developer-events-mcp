@@ -1,0 +1,91 @@
+# GoReleaser configuration for developer-events-mcp
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+    binary: developer-events-mcp
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - Merge pull request
+      - Merge branch
+
+release:
+  github:
+    owner: shelajev
+    name: developer-events-mcp
+  draft: false
+  prerelease: auto
+  name_template: "v{{.Version}}"
+  header: |
+    ## Developer.events MCP Server v{{.Version}}
+
+    Native binaries with zero dependencies for finding developer conference CFPs.
+
+    ### Quick Install
+
+    **Linux (x86_64):**
+    ```bash
+    curl -L https://github.com/shelajev/developer-events-mcp/releases/download/v{{.Version}}/developer-events-mcp_{{.Version}}_Linux_x86_64.tar.gz | tar xz
+    chmod +x developer-events-mcp
+    ```
+
+    **macOS (Apple Silicon):**
+    ```bash
+    curl -L https://github.com/shelajev/developer-events-mcp/releases/download/v{{.Version}}/developer-events-mcp_{{.Version}}_Darwin_arm64.tar.gz | tar xz
+    chmod +x developer-events-mcp
+    ```
+
+    **Windows:**
+    Download `developer-events-mcp_{{.Version}}_Windows_x86_64.zip` and extract.
+
+    ### What's New
+  footer: |
+
+    ---
+
+    **Full Changelog**: https://github.com/shelajev/developer-events-mcp/compare/{{.PreviousTag}}...v{{.Version}}
+
+    Built with ❤️ using Go and the official MCP SDK

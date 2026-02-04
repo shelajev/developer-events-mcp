@@ -1,0 +1,268 @@
+# Developer.events MCP Server 🎯
+
+**Single binary MCP server with ZERO dependencies!**
+
+A native MCP (Model Context Protocol) server built with Go that provides access to developer conference CFPs from [developers.events](https://developers.events/).
+
+## ⚡ Why This?
+
+- ✅ **True native binary** - no runtime required!
+- ✅ **Instant startup** - milliseconds, not seconds
+- ✅ **Tiny memory footprint** - ~10-20MB
+- ✅ **Single file distribution** - just download and run
+- ✅ **Cross-platform** - Linux, macOS (Intel & Apple Silicon), Windows
+
+## 📦 Download & Run
+
+### Quick Install
+
+**Linux (x86_64):**
+```bash
+curl -L https://github.com/YOU/REPO/releases/latest/download/developer-events-mcp-linux-amd64 -o mcp-server
+chmod +x mcp-server
+./mcp-server
+```
+
+**macOS (Apple Silicon):**
+```bash
+curl -L https://github.com/YOU/REPO/releases/latest/download/developer-events-mcp-darwin-arm64 -o mcp-server
+chmod +x mcp-server
+./mcp-server
+```
+
+**macOS (Intel):**
+```bash
+curl -L https://github.com/YOU/REPO/releases/latest/download/developer-events-mcp-darwin-amd64 -o mcp-server
+chmod +x mcp-server
+./mcp-server
+```
+
+**Windows:**
+Download `developer-events-mcp-windows-amd64.exe` from releases and run it.
+
+## 🚀 Quick Start
+
+### 1. Configure Claude Desktop
+
+Add to your Claude Desktop config:
+
+**macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+**Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "developer-events": {
+      "command": "/full/path/to/mcp-server"
+    }
+  }
+}
+```
+
+### 2. Restart Claude Desktop
+
+### 3. Start Using!
+
+Try these queries:
+- "What CFPs are closing in the next 7 days?"
+- "Show me Java-related conferences with open CFPs"
+- "Find CFPs for conferences in France"
+- "List AI conference CFPs closing this week"
+
+## 🔧 Available Tools
+
+### 1. `list_open_cfps`
+List all currently open Call for Papers for developer conferences.
+
+**Parameters:**
+- `limit` (optional, default: 20): Maximum number of results
+
+**Example:**
+> Show me the next 10 open CFPs
+
+### 2. `filter_cfps_by_topic`
+Filter open CFPs by topics or keywords (e.g., 'java', 'python', 'AI', 'cloud', 'kubernetes').
+
+**Parameters:**
+- `topics` (required): List of keywords to search for
+- `limit` (optional, default: 20): Maximum number of results
+
+**Examples:**
+> Find open CFPs related to Java and Kubernetes
+
+> Show me AI and machine learning conferences with open CFPs
+
+### 3. `find_closing_cfps`
+Find CFPs that are closing soon within a specified number of days.
+
+**Parameters:**
+- `daysAhead` (optional, default: 7): Number of days to look ahead
+- `topics` (optional): Filter by specific topics
+
+**Examples:**
+> What CFPs are closing in the next 7 days?
+
+> Show me Java-related CFPs closing in the next 14 days
+
+> Alert me to any AI conference CFPs closing this week
+
+### 4. `search_cfps_by_location`
+Search for open CFPs by location/country.
+
+**Parameters:**
+- `location` (required): Location to search for (e.g., 'France', 'USA', 'Berlin', 'Online')
+- `limit` (optional, default: 20): Maximum number of results
+
+**Examples:**
+> Find CFPs for conferences in France
+
+> Show me online conferences with open CFPs
+
+> What conferences in Berlin have open CFPs?
+
+## 🛠️ Building from Source
+
+### Prerequisites
+- Go 1.21 or later
+
+### Build for Current Platform
+```bash
+go build -ldflags="-s -w" -o developer-events-mcp main.go
+```
+
+### Build for All Platforms
+```bash
+./build-all.sh
+```
+
+This creates binaries in `bin/` for:
+- Linux (x86_64, ARM64)
+- macOS (Intel, Apple Silicon)
+- Windows (x86_64)
+
+## 📊 Performance
+
+| Metric | Value |
+|--------|-------|
+| Binary Size | ~7MB |
+| Startup Time | <10ms |
+| Memory Usage | ~10-20MB |
+| Runtime Dependencies | **NONE** |
+
+## 🏗️ Architecture
+
+- **Language:** Go 1.24
+- **MCP SDK:** github.com/modelcontextprotocol/go-sdk v1.2.0
+- **Transport:** stdio (standard input/output)
+- **Caching:** In-memory (1 hour TTL)
+- **HTTP Client:** Native Go net/http
+
+## 📡 Data Source
+
+- API: https://developers.events/all-cfps.json
+- Community-driven, updated regularly
+- Currently ~2,785 total CFPs, ~305 open
+- Cached for 1 hour to reduce API load
+
+## 🔒 Security
+
+- No external dependencies beyond Go standard library and MCP SDK
+- HTTPS-only API calls
+- No data stored persistently
+- Runs in user space (no elevated privileges needed)
+- Statically compiled binary
+
+## 🐛 Troubleshooting
+
+### Binary won't execute (macOS)
+macOS may quarantine downloaded binaries. Remove the quarantine attribute:
+```bash
+xattr -d com.apple.quarantine mcp-server
+```
+
+### Permission denied (Linux/macOS)
+Make the binary executable:
+```bash
+chmod +x mcp-server
+```
+
+### Claude Desktop doesn't see server
+- Verify you're using the **full absolute path** in the config
+- Restart Claude Desktop after config changes
+- Check Claude Desktop logs:
+  - macOS: `~/Library/Logs/Claude/`
+  - Windows: `%APPDATA%\Claude\logs\`
+
+### Server seems slow on first request
+The first request fetches and caches data from developers.events API. Subsequent requests will be instant (served from 1-hour cache).
+
+## 📝 Use Cases
+
+### Daily Reminder Agent
+Create a daily routine to check CFPs:
+> Good morning! Check for Java, Kubernetes, or Cloud-related CFPs closing in the next 10 days
+
+### Speaker Profile Matching
+Set up topic filters that match your speaking profile:
+> Find CFPs for: kubernetes, docker, cloud, devops, terraform
+
+### Location-Based Planning
+Plan conference speaking tours:
+> Show me all open CFPs in Europe
+
+> Find CFPs for conferences in USA happening in Q2 2026
+
+### Last-Minute Opportunities
+Find urgent opportunities:
+> What CFPs are closing in the next 3 days?
+
+## 🌍 Supported Platforms
+
+Pre-built binaries available for:
+- ✅ Linux x86_64
+- ✅ Linux ARM64 (Raspberry Pi, AWS Graviton, etc.)
+- ✅ macOS x86_64 (Intel)
+- ✅ macOS ARM64 (Apple Silicon M1/M2/M3)
+- ✅ Windows x86_64
+
+## 📚 Response Format
+
+Each CFP result includes:
+
+```json
+{
+  "conference": "Conference Name",
+  "location": "City (Country)",
+  "cfpDeadline": "MMM-DD-YYYY",
+  "daysRemaining": 30,
+  "conferenceDate": "YYYY-MM-DD",
+  "cfpLink": "https://...",
+  "conferenceWebsite": "https://...",
+  "status": "open"
+}
+```
+
+## 🤝 Contributing
+
+Contributions welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📄 License
+
+MIT
+
+## 🙏 Credits
+
+- **MCP Protocol:** Anthropic
+- **Go SDK:** Model Context Protocol team & Google
+- **API Data:** developers.events community
+- **Built with:** Go, official MCP SDK
+
+---
+
+**Built with ❤️ using Go and the official Model Context Protocol SDK**
+
+Need help? Open an issue or check the troubleshooting section above.
