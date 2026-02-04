@@ -42,7 +42,11 @@ Download `developer-events-mcp-windows-amd64.exe` from [releases](https://github
 
 ## 🚀 Quick Start
 
-### 1. Configure Claude Desktop
+This server can run in **two modes**:
+
+### Mode 1: Local (stdio) - For Claude Desktop
+
+1. **Configure Claude Desktop**
 
 Add to your Claude Desktop config:
 
@@ -59,15 +63,78 @@ Add to your Claude Desktop config:
 }
 ```
 
-### 2. Restart Claude Desktop
+2. **Restart Claude Desktop**
 
-### 3. Start Using!
+3. **Start Using!**
 
 Try these queries:
 - "What CFPs are closing in the next 7 days?"
 - "Show me Java-related conferences with open CFPs"
 - "Find CFPs for conferences in France"
 - "List AI conference CFPs closing this week"
+
+### Mode 2: HTTP Server - For Cloud Deployment
+
+Deploy as a web service that anyone can connect to without installing anything!
+
+#### Deploy to Google Cloud Run
+
+1. **Build and push the container:**
+```bash
+# Set your GCP project
+gcloud config set project YOUR_PROJECT_ID
+
+# Build and deploy in one command
+gcloud run deploy developer-events-mcp \
+  --source . \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --memory 256Mi
+```
+
+2. **Get your service URL:**
+```bash
+gcloud run services describe developer-events-mcp --region us-central1 --format 'value(status.url)'
+```
+
+3. **Connect from Claude Desktop:**
+
+Update your config to use the HTTP endpoint:
+
+```json
+{
+  "mcpServers": {
+    "developer-events": {
+      "url": "https://your-service-url.run.app"
+    }
+  }
+}
+```
+
+#### Local HTTP Mode
+
+Run locally as HTTP server for testing:
+```bash
+MODE=http PORT=8080 ./mcp-server
+# Or let Cloud Run set PORT automatically
+PORT=8080 ./mcp-server
+```
+
+#### Docker Build
+
+```bash
+docker build -t developer-events-mcp .
+docker run -p 8080:8080 developer-events-mcp
+```
+
+#### Other Cloud Platforms
+
+The Docker image works on any platform that supports containers:
+- **AWS ECS/Fargate**: Deploy the container
+- **Azure Container Apps**: `az containerapp create`
+- **Fly.io**: `fly launch`
+- **Railway**: Connect GitHub repo
 
 ## 🔧 Available Tools
 
@@ -153,9 +220,12 @@ This creates binaries in `bin/` for:
 
 - **Language:** Go 1.24
 - **MCP SDK:** github.com/modelcontextprotocol/go-sdk v1.2.0
-- **Transport:** stdio (standard input/output)
+- **Transport:** Dual-mode
+  - stdio (standard input/output) for local Claude Desktop
+  - HTTP streaming (streamable HTTP) for cloud deployment
 - **Caching:** In-memory (1 hour TTL)
 - **HTTP Client:** Native Go net/http
+- **Container:** Multi-stage Docker build (~15MB final image)
 
 ## 📡 Data Source
 

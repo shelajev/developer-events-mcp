@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"sort"
@@ -213,7 +214,7 @@ func matchesLocation(cfp CFP, location string) bool {
 	return strings.Contains(strings.ToLower(cfp.Conf.Location), strings.ToLower(location))
 }
 
-func main() {
+func createServer() *mcp.Server {
 	server := mcp.NewServer(&mcp.Implementation{
 		Name:    "developer-events-server",
 		Version: "1.0.0",
@@ -415,9 +416,45 @@ func main() {
 		}, nil
 	})
 
-	// Run server on stdio
-	if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
-		fmt.Fprintf(os.Stderr, "Error running server: %v\n", err)
-		os.Exit(1)
+	return server
+}
+
+func main() {
+	// Check if running in HTTP mode (Cloud Run sets PORT env var)
+	port := os.Getenv("PORT")
+	mode := os.Getenv("MODE")
+
+	if port != "" || mode == "http" {
+		// HTTP mode for Cloud Run
+		if port == "" {
+			port = "8080"
+		}
+
+		handler := mcp.NewStreamableHTTPHandler(func(r *http.Request) *mcp.Server {
+			return createServer()
+		}, &mcp.StreamableHTTPOptions{
+			JSONResponse: true,
+		})
+
+		// Add health check endpoint for Cloud Run
+		mux := http.NewServeMux()
+		mux.Handle("/", handler)
+		mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte("OK"))
+		})
+
+		addr := ":" + port
+		log.Printf("Starting HTTP MCP server on %s", addr)
+		if err := http.ListenAndServe(addr, mux); err != nil {
+			log.Fatalf("HTTP server error: %v", err)
+		}
+	} else {
+		// Stdio mode for local Claude Desktop
+		server := createServer()
+		if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
+			fmt.Fprintf(os.Stderr, "Error running server: %v\n", err)
+			os.Exit(1)
+		}
 	}
 }

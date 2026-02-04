@@ -1,0 +1,29 @@
+# Binaries
+bin/
+developer-events-mcp
+*.exe
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build artifacts
+build-all.sh
+
+# Documentation
+README.md
+LICENSE
