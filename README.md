@@ -147,31 +147,33 @@ List all currently open Call for Papers for developer conferences.
 **Example:**
 > Show me the next 10 open CFPs
 
-### 2. `filter_cfps_by_topic`
-Filter open CFPs by topics or keywords (e.g., 'java', 'python', 'AI', 'cloud', 'kubernetes').
+### 2. `search_cfps_by_keyword`
+Search open CFPs by keywords found in conference names and CFP links. Good for finding conferences related to technologies (e.g., 'java', 'python', 'kubernetes') or conference series names.
 
 **Parameters:**
-- `topics` (required): List of keywords to search for
+- `keywords` (required): List of keywords to search for in conference names and links
 - `limit` (optional, default: 20): Maximum number of results
 
 **Examples:**
-> Find open CFPs related to Java and Kubernetes
+> Find open CFPs with "Java" or "JVM" in the name
 
-> Show me AI and machine learning conferences with open CFPs
+> Show me conferences with "AI" or "machine learning" in the title
+
+> Search for CFPs related to Kubernetes
 
 ### 3. `find_closing_cfps`
-Find CFPs that are closing soon within a specified number of days.
+Find CFPs that are closing soon within a specified number of days, optionally filtered by keywords.
 
 **Parameters:**
 - `daysAhead` (optional, default: 7): Number of days to look ahead
-- `topics` (optional): Filter by specific topics
+- `keywords` (optional): Filter by keywords in conference names
 
 **Examples:**
 > What CFPs are closing in the next 7 days?
 
 > Show me Java-related CFPs closing in the next 14 days
 
-> Alert me to any AI conference CFPs closing this week
+> Find AI conference CFPs closing this week
 
 ### 4. `search_cfps_by_location`
 Search for open CFPs by location/country.

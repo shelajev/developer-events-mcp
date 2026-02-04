@@ -58,14 +58,14 @@ type ListOpenCFPsArgs struct {
 	Limit int `json:"limit" jsonschema:"Maximum number of results to return,default=20"`
 }
 
-type FilterByTopicArgs struct {
-	Topics []string `json:"topics" jsonschema:"List of topics/keywords to search for,required"`
-	Limit  int      `json:"limit" jsonschema:"Maximum number of results to return,default=20"`
+type SearchByKeywordArgs struct {
+	Keywords []string `json:"keywords" jsonschema:"List of keywords to search for in conference names and CFP links,required"`
+	Limit    int      `json:"limit" jsonschema:"Maximum number of results to return,default=20"`
 }
 
 type FindClosingCFPsArgs struct {
 	DaysAhead int      `json:"daysAhead" jsonschema:"Number of days to look ahead,default=7"`
-	Topics    []string `json:"topics" jsonschema:"Optional filter by topics/keywords"`
+	Keywords  []string `json:"keywords" jsonschema:"Optional keywords to search for in conference names"`
 }
 
 type SearchByLocationArgs struct {
@@ -80,17 +80,17 @@ type ListOpenCFPsResponse struct {
 	CFPs      []CFPResult `json:"cfps"`
 }
 
-type FilterByTopicResponse struct {
-	SearchTopics []string    `json:"searchTopics"`
-	TotalMatches int         `json:"totalMatches"`
-	CFPs         []CFPResult `json:"cfps"`
+type SearchByKeywordResponse struct {
+	SearchKeywords []string    `json:"searchKeywords"`
+	TotalMatches   int         `json:"totalMatches"`
+	CFPs           []CFPResult `json:"cfps"`
 }
 
 type FindClosingCFPsResponse struct {
-	DaysAhead    int         `json:"daysAhead"`
-	FilterTopics string      `json:"filterTopics"`
-	UrgentCFPs   int         `json:"urgentCFPs"`
-	CFPs         []CFPResult `json:"cfps"`
+	DaysAhead      int         `json:"daysAhead"`
+	FilterKeywords string      `json:"filterKeywords"`
+	UrgentCFPs     int         `json:"urgentCFPs"`
+	CFPs           []CFPResult `json:"cfps"`
 }
 
 type SearchByLocationResponse struct {
@@ -185,8 +185,8 @@ func toCFPResult(cfp CFP) CFPResult {
 	}
 }
 
-func matchesTopics(cfp CFP, topics []string) bool {
-	if len(topics) == 0 {
+func matchesKeywords(cfp CFP, keywords []string) bool {
+	if len(keywords) == 0 {
 		return true
 	}
 
@@ -196,8 +196,8 @@ func matchesTopics(cfp CFP, topics []string) bool {
 		searchText += " " + strings.ToLower(cfp.Conf.Location)
 	}
 
-	for _, topic := range topics {
-		if strings.Contains(searchText, strings.ToLower(topic)) {
+	for _, keyword := range keywords {
+		if strings.Contains(searchText, strings.ToLower(keyword)) {
 			return true
 		}
 	}
@@ -263,11 +263,11 @@ func createServer() *mcp.Server {
 		}, nil
 	})
 
-	// Tool 2: Filter by topics
+	// Tool 2: Search by keywords
 	mcp.AddTool(server, &mcp.Tool{
-		Name:        "filter_cfps_by_topic",
-		Description: "Filter open CFPs by topics or keywords (e.g., 'java', 'python', 'AI', 'cloud', 'kubernetes')",
-	}, func(ctx context.Context, req *mcp.CallToolRequest, args FilterByTopicArgs) (*mcp.CallToolResult, FilterByTopicResponse, error) {
+		Name:        "search_cfps_by_keyword",
+		Description: "Search open CFPs by keywords in conference names and CFP links (e.g., 'java', 'python', 'AI', 'cloud', 'kubernetes')",
+	}, func(ctx context.Context, req *mcp.CallToolRequest, args SearchByKeywordArgs) (*mcp.CallToolResult, SearchByKeywordResponse, error) {
 		limit := args.Limit
 		if limit == 0 {
 			limit = 20
@@ -275,13 +275,13 @@ func createServer() *mcp.Server {
 
 		openCFPs, err := getOpenCFPs()
 		if err != nil {
-			return nil, FilterByTopicResponse{}, err
+			return nil, SearchByKeywordResponse{}, err
 		}
 
-		// Filter by topics
+		// Filter by keywords
 		var filtered []CFP
 		for _, cfp := range openCFPs {
-			if matchesTopics(cfp, args.Topics) {
+			if matchesKeywords(cfp, args.Keywords) {
 				filtered = append(filtered, cfp)
 			}
 		}
@@ -303,19 +303,19 @@ func createServer() *mcp.Server {
 
 		return &mcp.CallToolResult{
 			Content: []mcp.Content{
-				&mcp.TextContent{Text: fmt.Sprintf("Found %d CFPs matching topics %v", len(results), args.Topics)},
+				&mcp.TextContent{Text: fmt.Sprintf("Found %d CFPs matching keywords %v", len(results), args.Keywords)},
 			},
-		}, FilterByTopicResponse{
-			SearchTopics: args.Topics,
-			TotalMatches: len(results),
-			CFPs:         results,
+		}, SearchByKeywordResponse{
+			SearchKeywords: args.Keywords,
+			TotalMatches:   len(results),
+			CFPs:           results,
 		}, nil
 	})
 
 	// Tool 3: Find closing CFPs
 	mcp.AddTool(server, &mcp.Tool{
 		Name:        "find_closing_cfps",
-		Description: "Find CFPs that are closing soon within a specified number of days",
+		Description: "Find CFPs that are closing soon within a specified number of days, optionally filtered by keywords",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, args FindClosingCFPsArgs) (*mcp.CallToolResult, FindClosingCFPsResponse, error) {
 		daysAhead := args.DaysAhead
 		if daysAhead == 0 {
@@ -334,7 +334,7 @@ func createServer() *mcp.Server {
 		var filtered []CFP
 		for _, cfp := range openCFPs {
 			if cfp.UntilDate <= maxDate && cfp.UntilDate >= now {
-				if matchesTopics(cfp, args.Topics) {
+				if matchesKeywords(cfp, args.Keywords) {
 					filtered = append(filtered, cfp)
 				}
 			}
@@ -350,9 +350,9 @@ func createServer() *mcp.Server {
 			results[i] = toCFPResult(cfp)
 		}
 
-		filterTopics := "none"
-		if len(args.Topics) > 0 {
-			filterTopics = strings.Join(args.Topics, ", ")
+		filterKeywords := "none"
+		if len(args.Keywords) > 0 {
+			filterKeywords = strings.Join(args.Keywords, ", ")
 		}
 
 		return &mcp.CallToolResult{
@@ -360,10 +360,10 @@ func createServer() *mcp.Server {
 				&mcp.TextContent{Text: fmt.Sprintf("Found %d urgent CFPs closing within %d days", len(results), daysAhead)},
 			},
 		}, FindClosingCFPsResponse{
-			DaysAhead:    daysAhead,
-			FilterTopics: filterTopics,
-			UrgentCFPs:   len(results),
-			CFPs:         results,
+			DaysAhead:      daysAhead,
+			FilterKeywords: filterKeywords,
+			UrgentCFPs:     len(results),
+			CFPs:           results,
 		}, nil
 	})
 
