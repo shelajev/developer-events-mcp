@@ -24,7 +24,6 @@ archives:
   - format: tar.gz
     name_template: >-
       {{ .ProjectName }}_
-      {{- .Version }}_
       {{- title .Os }}_
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386
@@ -68,18 +67,18 @@ release:
 
     **Linux (x86_64):**
     ```bash
-    curl -L https://github.com/shelajev/developer-events-mcp/releases/download/v{{.Version}}/developer-events-mcp_{{.Version}}_Linux_x86_64.tar.gz | tar xz
-    chmod +x developer-events-mcp
+    curl -L https://github.com/shelajev/developer-events-mcp/releases/download/v{{.Version}}/developer-events-mcp_Linux_x86_64.tar.gz | tar xz
+    ./developer-events-mcp
     ```
 
     **macOS (Apple Silicon):**
     ```bash
-    curl -L https://github.com/shelajev/developer-events-mcp/releases/download/v{{.Version}}/developer-events-mcp_{{.Version}}_Darwin_arm64.tar.gz | tar xz
-    chmod +x developer-events-mcp
+    curl -L https://github.com/shelajev/developer-events-mcp/releases/download/v{{.Version}}/developer-events-mcp_Darwin_arm64.tar.gz | tar xz
+    ./developer-events-mcp
     ```
 
     **Windows:**
-    Download `developer-events-mcp_{{.Version}}_Windows_x86_64.zip` and extract.
+    Download `developer-events-mcp_Windows_x86_64.zip` and extract.
 
     ### What's New
   footer: |

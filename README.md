@@ -131,29 +131,28 @@ The Docker image works on any platform that supports containers:
 
 ### Binary Installation
 
+Download the latest release from [releases](https://github.com/shelajev/developer-events-mcp/releases/latest).
+
 **Linux (x86_64):**
 ```bash
-curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp-linux-amd64 -o mcp-server
-chmod +x mcp-server
-./mcp-server
+curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp_Linux_x86_64.tar.gz | tar xz
+./developer-events-mcp
 ```
 
 **macOS (Apple Silicon):**
 ```bash
-curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp-darwin-arm64 -o mcp-server
-chmod +x mcp-server
-./mcp-server
+curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp_Darwin_arm64.tar.gz | tar xz
+./developer-events-mcp
 ```
 
 **macOS (Intel):**
 ```bash
-curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp-darwin-amd64 -o mcp-server
-chmod +x mcp-server
-./mcp-server
+curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp_Darwin_x86_64.tar.gz | tar xz
+./developer-events-mcp
 ```
 
 **Windows:**
-Download `developer-events-mcp-windows-amd64.exe` from [releases](https://github.com/shelajev/developer-events-mcp/releases) and run it.
+Download `developer-events-mcp_Windows_x86_64.zip` from [releases](https://github.com/shelajev/developer-events-mcp/releases/latest) and extract.
 
 ## 🔧 Available Tools
 
