@@ -4,42 +4,6 @@
 
 A native MCP (Model Context Protocol) server built with Go that provides access to developer conference CFPs from [developers.events](https://developers.events/).
 
-## ⚡ Why This?
-
-- ✅ **True native binary** - no runtime required!
-- ✅ **Instant startup** - milliseconds, not seconds
-- ✅ **Tiny memory footprint** - ~10-20MB
-- ✅ **Single file distribution** - just download and run
-- ✅ **Cross-platform** - Linux, macOS (Intel & Apple Silicon), Windows
-
-## 📦 Download & Run
-
-### Quick Install
-
-**Linux (x86_64):**
-```bash
-curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp-linux-amd64 -o mcp-server
-chmod +x mcp-server
-./mcp-server
-```
-
-**macOS (Apple Silicon):**
-```bash
-curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp-darwin-arm64 -o mcp-server
-chmod +x mcp-server
-./mcp-server
-```
-
-**macOS (Intel):**
-```bash
-curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp-darwin-amd64 -o mcp-server
-chmod +x mcp-server
-./mcp-server
-```
-
-**Windows:**
-Download `developer-events-mcp-windows-amd64.exe` from [releases](https://github.com/shelajev/developer-events-mcp/releases) and run it.
-
 ## 🚀 Quick Start
 
 ### Try it Now - Public Instance
@@ -154,6 +118,42 @@ The Docker image works on any platform that supports containers:
 - **Azure Container Apps**: `az containerapp create`
 - **Fly.io**: `fly launch`
 - **Railway**: Connect GitHub repo
+
+## ⚡ Why This?
+
+- ✅ **True native binary** - no runtime required!
+- ✅ **Instant startup** - milliseconds, not seconds
+- ✅ **Tiny memory footprint** - ~10-20MB
+- ✅ **Single file distribution** - just download and run
+- ✅ **Cross-platform** - Linux, macOS (Intel & Apple Silicon), Windows
+
+## 📦 Download & Run Locally
+
+### Binary Installation
+
+**Linux (x86_64):**
+```bash
+curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp-linux-amd64 -o mcp-server
+chmod +x mcp-server
+./mcp-server
+```
+
+**macOS (Apple Silicon):**
+```bash
+curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp-darwin-arm64 -o mcp-server
+chmod +x mcp-server
+./mcp-server
+```
+
+**macOS (Intel):**
+```bash
+curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp-darwin-amd64 -o mcp-server
+chmod +x mcp-server
+./mcp-server
+```
+
+**Windows:**
+Download `developer-events-mcp-windows-amd64.exe` from [releases](https://github.com/shelajev/developer-events-mcp/releases) and run it.
 
 ## 🔧 Available Tools
 
