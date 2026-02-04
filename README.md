@@ -42,6 +42,25 @@ Download `developer-events-mcp-windows-amd64.exe` from [releases](https://github
 
 ## 🚀 Quick Start
 
+### Try it Now - Public Instance
+
+**No installation needed!** Connect to the public hosted instance:
+
+**Claude Desktop Config** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "developer-events": {
+      "url": "https://developer-events-mcp-54127830651.europe-west2.run.app"
+    }
+  }
+}
+```
+
+Restart Claude Desktop and start asking about CFPs!
+
+---
+
 This server can run in **two modes**:
 
 ### Mode 1: Local (stdio) - For Claude Desktop
@@ -100,7 +119,7 @@ gcloud run services describe developer-events-mcp --region us-central1 --format 
 
 3. **Connect from Claude Desktop:**
 
-Update your config to use the HTTP endpoint:
+Update your config to use your deployed endpoint (or use the public instance at the top of this README):
 
 ```json
 {
