@@ -18,27 +18,27 @@ A native MCP (Model Context Protocol) server built with Go that provides access 
 
 **Linux (x86_64):**
 ```bash
-curl -L https://github.com/YOU/REPO/releases/latest/download/developer-events-mcp-linux-amd64 -o mcp-server
+curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp-linux-amd64 -o mcp-server
 chmod +x mcp-server
 ./mcp-server
 ```
 
 **macOS (Apple Silicon):**
 ```bash
-curl -L https://github.com/YOU/REPO/releases/latest/download/developer-events-mcp-darwin-arm64 -o mcp-server
+curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp-darwin-arm64 -o mcp-server
 chmod +x mcp-server
 ./mcp-server
 ```
 
 **macOS (Intel):**
 ```bash
-curl -L https://github.com/YOU/REPO/releases/latest/download/developer-events-mcp-darwin-amd64 -o mcp-server
+curl -L https://github.com/shelajev/developer-events-mcp/releases/latest/download/developer-events-mcp-darwin-amd64 -o mcp-server
 chmod +x mcp-server
 ./mcp-server
 ```
 
 **Windows:**
-Download `developer-events-mcp-windows-amd64.exe` from releases and run it.
+Download `developer-events-mcp-windows-amd64.exe` from [releases](https://github.com/shelajev/developer-events-mcp/releases) and run it.
 
 ## 🚀 Quick Start
 
